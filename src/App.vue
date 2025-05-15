@@ -20,17 +20,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-
-const student = reactive<{
-  name: string
-  age: number | null
-  image: string | null
-}>({
+const student = {
   name: 'Hugh',
   age: null,
   image: null,
-})
+}
 </script>
 
 <style></style>

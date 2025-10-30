@@ -1,15 +1,47 @@
 <template>
   <div
-    class="ui-profile flex items-center gap-2"
+    class="ui-profile flex items-center gap-4"
     :class="{
       focused
     }"
   >
-    <div class="bg-gray-300 rounded-full w-14 h-14"></div>
+    <div
+      class="rounded-full
+             relative
+             w-20
+             h-20
+             bg-[color:var(--ui-gray)]
+             after:content-['']
+             after:absolute
+             after:-left-1
+             after:-top-1
+             after:block
+             after:w-[88px]
+             after:h-[88px]
+             after:rounded-full
+             after:pointer-events-none
+             after:ease
+             after:transition-colors
+             after:duration-200
+             after:border
+             after:box-border
+             after:transition-border-color"
+      :class="[
+          focused ? 'after:border-[color:var(--ui-primary)]' : 'after:border-[color:transparent]'
+      ]"
+    >
+      <img :src="student.image"
+           width="80"
+           height="80"
+           loading="lazy"
+           alt="Student photo"
+      /><!-- TODO: with api add skeleton -->
+    </div>
+
     <div class="flex flex-col gap-3">
       <label
         for="hours-old"
-        class="font-koulen text-base leading-[15px] tracking-[0.02em]"
+        class="font-koulen text-base leading-[15px] tracking-[0.02em] ease transition-colors duration-200"
         :class="[
           focused ? 'text-[color:var(--ui-primary)]' : 'text-[color:var(--ui-dark)]'
         ]"
@@ -35,8 +67,6 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
-import { useFocus, onStartTyping } from '@vueuse/core'
 import type { Student } from '@/types/student.ts'
 
 defineProps<{

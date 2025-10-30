@@ -1,5 +1,5 @@
 export interface Student {
   name: string;
-  age: number | null;
-  image: string | null;
+  age: number;
+  image: string;
 }

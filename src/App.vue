@@ -5,14 +5,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-
 import Profile from '@/components/UiProfile.vue'
 import type { Student } from '@/types/student.ts'
+import photo from '@/assets/photo.png'
 
 const student: Student = reactive({
   name: 'Samuel',
-  age: null,
-  image: null,
+  age: 25,
+  image: photo
 })
 </script>

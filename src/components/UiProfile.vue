@@ -50,13 +50,12 @@
       </label>
 
       <div class="flex gap-3 items-center">
-        <!-- зеркальный span -->
         <div class="relative overflow-hidden">
           <span
             ref="mirror"
             class="absolute invisible whitespace-pre font-inter text-[18px] leading-[22px] max-w-full"
           >
-            {{ value }}
+            {{ formattedValue }}
           </span>
 
           <input
@@ -69,7 +68,9 @@
               focused ? 'border-[1.5px] border-[color:var(--ui-primary-light)] text-[color:var(--ui-dark)]' : 'border-[1px] border-[color:var(--ui-light-gray)] text-[color:var(--ui-dark)]/30'
             ]"
             :style="{ width: `${inputWidth}px` }"
-            v-model="value"
+            :value="formattedValue"
+            @beforeinput="onBeforeInput"
+            @input="onInput($event)"
           />
         </div>
         <div
@@ -84,17 +85,39 @@
 <script setup lang="ts">
 import type { Student } from '@/types/student.ts'
 
-defineProps<{
+const props = defineProps<{
   student: Student
+}>()
+const emit = defineEmits<{
+  (e: 'update:age', value: number | null): void
 }>()
 
 const input = useTemplateRef<HTMLInputElement>('input')
 const { focused } = useFocus(input, { initialValue: false })
 onStartTyping(() => input.value?.focus())
 
-const value = ref('')
-const inputWidth = computed(() => Math.min(Math.max(width.value + 22, 72), 400)) // padding + границы
+const rawValue = ref(props.student.age?.toString() || '')
+
+const formattedValue = computed(() => {
+  if (!rawValue.value) return ''
+  return rawValue.value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+})
+
+const onBeforeInput = (e: InputEvent) => {
+  if (!e.data) return
+  if (!/^\d+$/.test(e.data)) {
+    e.preventDefault()
+  }
+}
+
+const onInput = (e: InputEvent) => {
+  const target = e.target as HTMLInputElement
+  const digits = target.value.replace(/\D/g, '')
+  rawValue.value = digits
+  emit('update:age', digits ? parseInt(digits) : null)
+}
 
 const mirror = useTemplateRef<HTMLSpanElement>('mirror')
 const { width } = useElementSize(mirror)
+const inputWidth = computed(() => Math.min(Math.max(width.value + 22, 72), 400))
 </script>
